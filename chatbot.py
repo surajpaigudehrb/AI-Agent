@@ -56,7 +56,7 @@ multi_ai_agent = Agent(
 )
 
 # Streamlit app interface
-st.title("AI Stock Analysis Chatbot")
+st.title("AI Stock Analysis Chatbot developed by :- Suraj")
 
 # User query input
 query = st.text_input("Enter your query (e.g., 'Summarize analyst recommendations for NVDA'): ")
