@@ -27,7 +27,7 @@ httpx.Client.__init__ = patched_init
 web_search_agent = Agent(
     name="Web Search Agent",
     role="Search the web for the information",
-    model=Groq(id="Llama3-8b-8192"),
+    model=Groq(id="llama-3.3-70b-versatile"),
     tools=[DuckDuckGo()],
     instructions=["Always include sources"],
     show_tools_calls=True,
@@ -37,10 +37,9 @@ web_search_agent = Agent(
 # Define financial agent
 finance_agent = Agent(
     name="Finance AI Agent",
-    model=Groq(id="Llama3-8b-8192"),
+    model=Groq(id="llama-3.3-70b-versatile"),
     tools=[
-        YFinanceTools(stock_price=True, analyst_recommendations=True, stock_fundamentals=True,
-                      company_news=True),
+        YFinanceTools(enable_all=True),
     ],
     instructions=["Use tables to display the data"],
     show_tool_calls=True,
@@ -50,7 +49,7 @@ finance_agent = Agent(
 # Define multi-agent
 multi_ai_agent = Agent(
     team=[web_search_agent, finance_agent],
-    model=Groq(id="Llama3-8b-8192"),
+    model=Groq(id="llama-3.3-70b-versatile"),
     instructions=["Always include sources", "Use tables to display data"],
     show_tool_calls=True,
     markdown=True,
@@ -73,7 +72,7 @@ if st.button("Analyze"):
                     content = response.content.strip()
 
                     # Display the content based on its type
-                    st.write(content)
+                    st.write(response)
                     
             else:
                 st.warning("No response received. Please try again.")
