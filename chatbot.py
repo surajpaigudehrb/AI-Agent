@@ -27,7 +27,7 @@ httpx.Client.__init__ = patched_init
 web_search_agent = Agent(
     name="Web Search Agent",
     role="Search the web for the information",
-    model=Groq(id="llama-3.3-70b-versatile"),
+    model=Groq(id="gemma2-9b-it"),
     tools=[DuckDuckGo()],
     instructions=["Always include sources"],
     show_tools_calls=True,
@@ -37,7 +37,7 @@ web_search_agent = Agent(
 # Define financial agent
 finance_agent = Agent(
     name="Finance AI Agent",
-    model=Groq(id="llama-3.3-70b-versatile"),
+    model=Groq(id="gemma2-9b-it"),
     tools=[
         YFinanceTools(enable_all=True),
     ],
@@ -49,7 +49,7 @@ finance_agent = Agent(
 # Define multi-agent
 multi_ai_agent = Agent(
     team=[web_search_agent, finance_agent],
-    model=Groq(id="llama-3.3-70b-versatile"),
+    model=Groq(id="gemma2-9b-it"),
     instructions=["Always include sources", "Use tables to display data"],
     show_tool_calls=True,
     markdown=True,
