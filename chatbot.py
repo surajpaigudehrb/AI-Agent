@@ -3,9 +3,14 @@ from phi.agent import Agent
 from phi.model.groq import Groq
 from phi.tools.yfinance import YFinanceTools
 from phi.tools.duckduckgo import DuckDuckGo
+import openai
 import httpx
 import os
 from dotenv import load_dotenv
+from phi.utils.pprint import pprint_run_response
+from phi.agent import Agent, RunResponse
+import pdb
+
 
 # Load environment variables
 load_dotenv()
@@ -23,7 +28,7 @@ httpx.Client.__init__ = patched_init
 web_search_agent = Agent(
     name="Web Search Agent",
     role="Search the web for the information",
-    model=Groq(id="llama-3.1-70b-versatile"),
+    model=Groq(id="Llama3-8b-8192"),
     tools=[DuckDuckGo()],
     instructions=["Always include sources"],
     show_tools_calls=True,
@@ -33,7 +38,7 @@ web_search_agent = Agent(
 # Define financial agent
 finance_agent = Agent(
     name="Finance AI Agent",
-    model=Groq(id="llama-3.1-70b-versatile"),
+    model=Groq(id="Llama3-8b-8192"),
     tools=[
         YFinanceTools(stock_price=True, analyst_recommendations=True, stock_fundamentals=True,
                       company_news=True),
@@ -46,7 +51,7 @@ finance_agent = Agent(
 # Define multi-agent
 multi_ai_agent = Agent(
     team=[web_search_agent, finance_agent],
-    model=Groq(id="llama-3.1-70b-versatile"),
+    model=Groq(id="Llama3-8b-8192"),
     instructions=["Always include sources", "Use tables to display data"],
     show_tool_calls=True,
     markdown=True,
@@ -63,9 +68,14 @@ if st.button("Analyze"):
     if query:
         with st.spinner("Processing your request..."):
             # Fetch response from the multi-agent
-            response = multi_ai_agent.print_response(query, stream=False)
-            if response:
-                st.markdown(response)
+            response: RunResponse = multi_ai_agent.run(query)
+            #pdb.set_trace()  # Execution will pause here
+            if response and response.content:
+                    content = response.content.strip()
+
+                    # Display the content based on its type
+                    st.write(content)
+                    
             else:
                 st.warning("No response received. Please try again.")
 
